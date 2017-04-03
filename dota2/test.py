@@ -1,2 +1,2 @@
-import os
- print('haha')
+from os import *
+print('haha')
