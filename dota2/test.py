@@ -1,11 +1,24 @@
 import os
 import requests
+import pymysql
+import time
+import xml.etree.ElementTree as ET
 
-r = requests.get('http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v001/', 
+file = open('apikey.txt')
+apikey = file.read()
+file.close()
+
+r = requests.get('http://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/v001/', 
 params = {'format':'XML',
-'key':'A2378FD5FA20FDC79CC0BAA78675F631',
-'skill':'1',
-'min_players':'10',
-'league_id':'0',
-'start_at_match_id':'3099116571'})
-print(r.text)
+'key':apikey,
+'start_at_match_seq_num':'2706339693'})
+root = ET.fromstring(r.text)
+matches = root.find('matches').findall('match')
+
+
+
+endtimes = []
+for match in matches:
+    time = int(match.find('duration').text)+int(match.find('start_time').text)
+    endtimes.append(time)
+print(endtimes)
